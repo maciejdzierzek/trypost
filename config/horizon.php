@@ -228,9 +228,7 @@ return [
 
         'social-publishing' => [
             'connection' => 'redis',
-            // Overridden at boot with Platform::enabledQueues() — config files load
-            // before trypost.php, so isEnabled() is not available here.
-            'queue' => Platform::allQueues(),
+            'queue' => Platform::enabledQueues(),
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
             'minProcesses' => 1,

@@ -381,9 +381,6 @@ enum Platform: string
     }
 
     /**
-     * Queues for platforms enabled in this installation. Used by Horizon after
-     * config has loaded — do not call from config files (see AppServiceProvider).
-     *
      * @return array<string>
      */
     public static function enabledQueues(): array
@@ -405,7 +402,16 @@ enum Platform: string
 
     public function isEnabled(): bool
     {
-        return config("trypost.platforms.{$this->value}.enabled", true);
+        $configKey = "trypost.platforms.{$this->value}.enabled";
+
+        if (config()->has($configKey)) {
+            return (bool) config($configKey);
+        }
+
+        return filter_var(
+            env(strtoupper(str_replace('-', '_', $this->value)).'_ENABLED', true),
+            FILTER_VALIDATE_BOOLEAN
+        );
     }
 
     /**
