@@ -404,7 +404,7 @@ enum Platform: string
     {
         return (bool) config(
             "trypost.platforms.{$this->value}.enabled",
-            filter_var(env(match ($this) {
+            env(match ($this) {
                 self::LinkedIn => 'LINKEDIN_ENABLED',
                 self::LinkedInPage => 'LINKEDIN_PAGE_ENABLED',
                 self::X => 'X_ENABLED',
@@ -419,7 +419,7 @@ enum Platform: string
                 self::Mastodon => 'MASTODON_ENABLED',
                 self::Telegram => 'TELEGRAM_ENABLED',
                 self::Discord => 'DISCORD_ENABLED',
-            }, true), FILTER_VALIDATE_BOOLEAN),
+            }, true),
         );
     }
 
