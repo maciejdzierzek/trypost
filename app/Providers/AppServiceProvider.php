@@ -211,7 +211,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Disable wrapping of JSON resources
         JsonResource::withoutWrapping();
-        Model::shouldBeStrict(! $this->app->isProduction());
+        Model::shouldBeStrict();
 
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
