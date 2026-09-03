@@ -114,6 +114,19 @@ test('platform can be disabled via config', function () {
     expect(Platform::LinkedIn->isEnabled())->toBeFalse();
 });
 
+test('enabled queues only include enabled platforms', function () {
+    config([
+        'trypost.platforms.tiktok.enabled' => false,
+        'trypost.platforms.pinterest.enabled' => false,
+    ]);
+
+    $queues = Platform::enabledQueues();
+
+    expect($queues)->not->toContain('social-tiktok')
+        ->and($queues)->not->toContain('social-pinterest')
+        ->and($queues)->toContain('social-linkedin');
+});
+
 test('linkedin pages and instagram facebook are not directly connectable', function () {
     expect(Platform::LinkedInPage->isConnectable())->toBeFalse();
     expect(Platform::LinkedIn->isConnectable())->toBeTrue();

@@ -228,19 +228,9 @@ return [
 
         'social-publishing' => [
             'connection' => 'redis',
-            // Only queue platforms that are actually enabled. Reading the toggles from
-            // env() rather than config() is deliberate: config files are loaded in
-            // alphabetical order, so config('trypost.*') is not populated yet while this
-            // file is being evaluated - Platform::isEnabled() would always fall back to
-            // true here. Without this filter every supported platform gets a worker
-            // (minProcesses => 1), including ones the installation never connects.
-            'queue' => array_values(array_filter(
-                Platform::allQueues(),
-                fn (string $queue) => filter_var(
-                    env(Str::upper(Str::replace('-', '_', Str::after($queue, 'social-'))).'_ENABLED', true),
-                    FILTER_VALIDATE_BOOLEAN
-                )
-            )),
+            // Overridden at boot with Platform::enabledQueues() — config files load
+            // before trypost.php, so isEnabled() is not available here.
+            'queue' => Platform::allQueues(),
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
             'minProcesses' => 1,

@@ -380,6 +380,21 @@ enum Platform: string
         return array_map(fn (self $platform) => $platform->queue(), self::cases());
     }
 
+    /**
+     * Queues for platforms enabled in this installation. Used by Horizon after
+     * config has loaded — do not call from config files (see AppServiceProvider).
+     *
+     * @return array<string>
+     */
+    public static function enabledQueues(): array
+    {
+        return collect(self::cases())
+            ->filter(fn (self $platform): bool => $platform->isEnabled())
+            ->map(fn (self $platform): string => $platform->queue())
+            ->values()
+            ->all();
+    }
+
     public function instagramGraphBaseUrl(): string
     {
         return match ($this) {

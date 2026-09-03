@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Enums\SocialAccount\Platform;
 use App\Listeners\StripeEventListener;
 use App\Models\AccessToken;
 use App\Models\Account;
@@ -80,6 +81,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureHorizon();
         $this->configureMorphMap();
         $this->configurePostHog();
         $this->configureRateLimiting();
@@ -90,6 +92,13 @@ class AppServiceProvider extends ServiceProvider
         Cashier::useSubscriptionModel(Subscription::class);
         Cashier::useSubscriptionItemModel(SubscriptionItem::class);
         Cashier::keepPastDueSubscriptionsActive();
+    }
+
+    protected function configureHorizon(): void
+    {
+        config([
+            'horizon.defaults.social-publishing.queue' => Platform::enabledQueues(),
+        ]);
     }
 
     protected function configureMorphMap(): void
