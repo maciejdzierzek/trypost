@@ -404,33 +404,23 @@ enum Platform: string
     {
         return (bool) config(
             "trypost.platforms.{$this->value}.enabled",
-            $this->enabledFromEnv(),
+            filter_var(env(match ($this) {
+                self::LinkedIn => 'LINKEDIN_ENABLED',
+                self::LinkedInPage => 'LINKEDIN_PAGE_ENABLED',
+                self::X => 'X_ENABLED',
+                self::TikTok => 'TIKTOK_ENABLED',
+                self::YouTube => 'YOUTUBE_ENABLED',
+                self::Facebook => 'FACEBOOK_ENABLED',
+                self::Instagram => 'INSTAGRAM_ENABLED',
+                self::InstagramFacebook => 'INSTAGRAM_FACEBOOK_ENABLED',
+                self::Threads => 'THREADS_ENABLED',
+                self::Pinterest => 'PINTEREST_ENABLED',
+                self::Bluesky => 'BLUESKY_ENABLED',
+                self::Mastodon => 'MASTODON_ENABLED',
+                self::Telegram => 'TELEGRAM_ENABLED',
+                self::Discord => 'DISCORD_ENABLED',
+            }, true), FILTER_VALIDATE_BOOLEAN),
         );
-    }
-
-    private function enabledFromEnv(): bool
-    {
-        return filter_var(env($this->enabledEnvKey(), true), FILTER_VALIDATE_BOOLEAN);
-    }
-
-    private function enabledEnvKey(): string
-    {
-        return match ($this) {
-            self::LinkedIn => 'LINKEDIN_ENABLED',
-            self::LinkedInPage => 'LINKEDIN_PAGE_ENABLED',
-            self::X => 'X_ENABLED',
-            self::TikTok => 'TIKTOK_ENABLED',
-            self::YouTube => 'YOUTUBE_ENABLED',
-            self::Facebook => 'FACEBOOK_ENABLED',
-            self::Instagram => 'INSTAGRAM_ENABLED',
-            self::InstagramFacebook => 'INSTAGRAM_FACEBOOK_ENABLED',
-            self::Threads => 'THREADS_ENABLED',
-            self::Pinterest => 'PINTEREST_ENABLED',
-            self::Bluesky => 'BLUESKY_ENABLED',
-            self::Mastodon => 'MASTODON_ENABLED',
-            self::Telegram => 'TELEGRAM_ENABLED',
-            self::Discord => 'DISCORD_ENABLED',
-        };
     }
 
     /**
