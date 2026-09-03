@@ -402,12 +402,14 @@ enum Platform: string
 
     public function isEnabled(): bool
     {
-        $configKey = "trypost.platforms.{$this->value}.enabled";
+        return (bool) config(
+            "trypost.platforms.{$this->value}.enabled",
+            $this->enabledFromEnv(),
+        );
+    }
 
-        if (config()->has($configKey)) {
-            return (bool) config($configKey);
-        }
-
+    private function enabledFromEnv(): bool
+    {
         return filter_var(env($this->enabledEnvKey(), true), FILTER_VALIDATE_BOOLEAN);
     }
 
